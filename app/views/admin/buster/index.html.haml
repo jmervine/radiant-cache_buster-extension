@@ -1,0 +1,5 @@
+%h3="Current Cache Buster: <tt>'#{CacheBuster.buster}'</tt>"
+- form_for :buster, :url => "/admin/buster", :method => :post do |f|
+  = f.submit('Reset Cache Buster')
+
+
