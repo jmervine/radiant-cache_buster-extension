@@ -40,4 +40,3 @@ describe Admin::BusterController do
     end
   end
 end
-

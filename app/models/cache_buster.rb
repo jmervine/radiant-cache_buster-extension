@@ -7,11 +7,12 @@ class CacheBuster < ActiveRecord::Base
   def self.buster
     self.there_can_be_only_one
 
-    if ActiveSupport::TimeWithZone.new(self.first.updated_at, 'utc') < ActiveSupport::TimeWithZone.new(Time.now-self.timeout, 'utc')
+    if self.first.updated_at.to_i < Time.now.to_i-self.timeout
       buster = self.bust_buster
     else
       buster = self.last
     end
+
     "?#{buster.updated_at.to_i}"
   end
 

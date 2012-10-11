@@ -15,7 +15,7 @@ class CacheBusterExtension < Radiant::Extension
 
     Page.class_eval do      
      include CacheBusterTags
-   end
+    end
   end
 end
 

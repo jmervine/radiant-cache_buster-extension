@@ -6,4 +6,3 @@ module RadiantCacheBusterExtension
   AUTHORS     = ["Josh Mervine"]
   EMAIL       = ["joshua@mervine.net"]
 end
-

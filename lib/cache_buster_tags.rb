@@ -1,7 +1,6 @@
 module CacheBusterTags 
   include Radiant::Taggable
   class TagError < StandardError; end
-
   desc %{
 Renders a cache buster.
 
@@ -16,6 +15,4 @@ The above example will produce the following:
   tag 'cache_buster' do |tag|
     CacheBuster.buster
   end
-
 end
-
