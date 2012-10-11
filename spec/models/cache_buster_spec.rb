@@ -4,44 +4,40 @@ describe CacheBuster do
 
   before(:all) do
     # ensure default after previous tests
-    Radiant::Config['cache_buster.timeout'] = CacheBuster::DEFAULT_TIMEOUT
+    Radiant::Config['cache_buster.timeout'] = 1.day
   end
 
-  describe '.buster' do
-    it 'should return cache buster' do
-      CacheBuster.buster.should be
-    end
-    it 'should be a string' do
-      CacheBuster.buster.should be_a_kind_of String
-      CacheBuster.buster.should match /^\?[0-9]+$/
-    end
-  end
-
-  describe '.timeout' do
-    describe 'without timeout config' do
-      it 'should be an int' do
-        CacheBuster.timeout.should be_a_kind_of Fixnum
+  describe '.buster!' do
+    describe "without attributes" do
+      it 'should return cache buster' do
+        CacheBuster.buster!.should be
+      end
+      it 'should be a string' do
+        CacheBuster.buster!.should be_a_kind_of String
+        CacheBuster.buster!.should match /^\?[0-9]+$/
       end
     end
-    describe 'with timeout config' do
-      before do
-        Radiant::Config['cache_buster.timeout'] = 1
+
+    describe "with name" do
+      it 'should return cache buster' do
+        CacheBuster.buster!("spec1").should be
       end
-      it 'should be an int' do
-        CacheBuster.timeout.should be_a_kind_of Fixnum
-        CacheBuster.timeout.should == 1
+      it 'should be a string' do
+        CacheBuster.buster!("spec1").should be_a_kind_of String
+        CacheBuster.buster!("spec1").should match /^\?[0-9]+$/
       end
+    end
 
-      it 'should update after timeout passes' do
-
-        buster1 = CacheBuster.buster
-        sleep 2
-        buster2 = CacheBuster.buster
-
-        buster1.should_not == buster2
-        #buster1.gsub("?", "").to_i.should be_less_then buster2.gsub("?", "").to_i
+    describe "with name and timeout" do
+      it 'should return cache buster' do
+        CacheBuster.buster!("spec2", 1.minute).should be
+      end
+      it 'should be a string' do
+        CacheBuster.buster!("spec2", 1.minute).should be_a_kind_of String
+        CacheBuster.buster!("spec2", 1.minute).should match /^\?[0-9]+$/
       end
     end
   end
+
 end
 

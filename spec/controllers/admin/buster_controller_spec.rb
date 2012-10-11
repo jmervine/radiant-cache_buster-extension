@@ -29,6 +29,7 @@ describe Admin::BusterController do
     end
 
     describe "update Buster" do
+      let(:before_count) { CacheBuster.count }
       before do
         post :index
       end
@@ -36,6 +37,27 @@ describe Admin::BusterController do
       it "should render the index view" do
         response.should be_success
         response.should render_template('index')
+      end
+
+      it "should have removed a cache buster" do
+        CacheBuster.count.should == before_count-1
+      end
+    end
+  end
+
+  describe "all" do
+    describe "reset all" do
+      before do
+        get :all
+      end
+
+      it "should render the index view" do
+        response.should be_success
+        response.should render_template('index')
+      end
+
+      it "should have destroyed all cache busters" do
+        CacheBuster.count.should == 0
       end
     end
   end

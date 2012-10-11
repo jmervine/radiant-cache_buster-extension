@@ -1,7 +1,9 @@
 class CreateCacheBuster < ActiveRecord::Migration
   def self.up
     create_table :cache_busters, :force => false do |t|
-      t.datetime :updated_at, :null => false
+      t.name      :string, :null => false
+      t.datetime  :buster, :null => false
+      t.integer   :timeout, :default => 1.day, :null => false
     end
     
   end

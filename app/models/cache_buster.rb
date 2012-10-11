@@ -1,47 +1,35 @@
 class CacheBuster < ActiveRecord::Base
 
-  DEFAULT_TIMEOUT = 1.day
+  MASTER_BUSTER = "MASTER_CACHE_BUSTER".freeze
+  DEFAULT_TIMEOUT   = (Radiant::Config['cache_buster.timeout'] ? Radiant::Config['cache_buster.timeout'] : 1.day).freeze
 
-  before_save :ensure_updated_at
+  validates_uniqueness_of :name
+  before_filter :ensure_buster, :ensure_timeout
 
-  def self.buster
-    self.there_can_be_only_one
-
-    if self.first.updated_at.to_i < Time.now.to_i-self.timeout
-      buster = self.bust_buster
-    else
-      buster = self.last
+  def self.buster! name=MASTER_BUSTER, timeout=nil
+    cache_buster = CacheBuster.find_or_create_by_name(name)
+    if timeout and cache_buster.timeout.nil?
+      cache_buster.timeout = timeout
     end
-
-    "?#{buster.updated_at.to_i}"
+    cache_buster.buster!
   end
 
-  def self.bust_buster
-    if self.first.nil?
-       self.new.save
-    else
-      self.first.save
-    end
-    self.first
+  def buster!
+    bust_buster if buster.to_i < Time.now.to_i-timeout
+    "?#{buster.to_i}"
   end
 
-  def self.timeout
-    (Radiant::Config['cache_buster.timeout'] ? Radiant::Config['cache_buster.timeout'].to_i : DEFAULT_TIMEOUT).to_i
+  def bust_buster
+    self.buster = Time.now
   end
 
   private
-  def self.there_can_be_only_one
-    return self.new(:updated_at => Time.now).save if self.first.nil?
-
-    unless self.first == self.last
-      the_one = self.last
-      self.destroy_all
-      self.new(:updated_at => the_one.updated_at).save
-    end
+  def ensure_buster
+    buster = Time.now
   end
 
-  def ensure_updated_at
-    self.updated_at = Time.now
+  def ensure_timeout
+    timeout = DEFAULT_TIMEOUT unless timeout
   end
-
 end
+
