@@ -18,4 +18,3 @@ class CacheBusterExtension < Radiant::Extension
     end
   end
 end
-

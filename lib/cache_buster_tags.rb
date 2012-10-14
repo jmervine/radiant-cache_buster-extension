@@ -25,8 +25,11 @@ Using the <i>name</i> attribute created a custom cache buster for named items, e
 Using the <i>timeout</i> attribute creates a custon timeout for that cache buster. It's worth noting, that while it's possible to create a custom cache buster and use it in two different places with different timeouts, it will behave oddly, yet not break.
   }
   tag 'cache_buster' do |tag|
-    name    = (tag.attr['name']    ? tag.attr['name']    : CacheBuster::MASTER_BUSTER)
-    timeout = (tag.attr['timeout'] ? tag.attr['timeout'] : nil)
-    CacheBuster.buster!(name, timeout)
+    name    = (tag.attr['name']    ? tag.attr['name']    : CacheBuster.master_buster)
+    timeout = (tag.attr['timeout'] ? tag.attr['timeout'] : CacheBuster.default_timeout)
+    unless cache_buster = CacheBuster.find_by_name(name)
+      cache_buster = CacheBuster.create(:name => name, :timeout => timeout, :buster => Time.now)
+    end
+    cache_buster.buster!
   end
 end

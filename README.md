@@ -13,5 +13,3 @@ Simply adds a tag which applies to a cache buster to any asset.
         Radiant.config do |config|
                 config['cache_buster.timeout'] = 1.day
         end
-
-

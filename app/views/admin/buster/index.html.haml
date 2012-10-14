@@ -1,15 +1,9 @@
-- form_for :buster, :url => "/admin/buster", :method => :post do |f|
-  = hidden_field 'name', "CLEAR_ALL_CACHES" # feels hacky
-  - CacheBuster.all.each do |cache|
-    %div{ :style => "width:100%" }
-      %div{ :style => "width:90%" }
-        %h4<=cache.name.capitalize
-      %div{ :style => "float:right" }
-        = f.submit('Reset All Caches', :confirm => "Are you sure you want to reset everything?")
+- form_for :buster, :url => "/admin/buster/all", :method => :post do |f|
+  = f.submit('Reset All Caches', :confirm => "Are you sure you want to reset everything?")
 
 %hr
 
-- CacheBuster.all.each do |cache|
+- @busters.each do |cache|
   %div{ :style => "width:100%" }
     - form_for :buster, :url => "/admin/buster/all", :method => :post do |f|
       = hidden_field 'name', cache.name
@@ -17,4 +11,3 @@
         %h4<=cache.name.capitalize
       %div{ :style => "float:right" }
         = f.submit('Reset')
-

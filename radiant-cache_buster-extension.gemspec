@@ -22,4 +22,3 @@ Gem::Specification.new do |s|
   s.test_files    = Dir['spec/**/*'] - ignores
   s.require_paths = ["lib"]
 end
-
